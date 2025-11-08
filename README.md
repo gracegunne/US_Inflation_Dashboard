@@ -29,5 +29,6 @@ It also helped me get more comfortable with GitHub — committing, pushing, and 
    git clone https://github.com/gracegunne/US_Inflation_Dashboard.git
    cd US_Inflation_Dashboard
 
-![Dashboard Preview](Screenshot 2025-11-08 153554.png)
+![Dashboard Preview](dashboard_screenshot.png)
+
 
