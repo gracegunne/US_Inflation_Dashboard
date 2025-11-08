@@ -1,21 +1,32 @@
-# US Inflation Panel (Dash)
+# US Inflation Dashboard
 
-My panel for the 4-panel group dashboard. It shows US inflation (CPI, Core CPI, PCE) with YoY / MoM / SAAR, a 2% guide, recession shading, and an optional Fed funds overlay.
+This project is my panel for our group’s Python Dashboard Assignment.  
+My focus was on **US inflation** — how it’s evolved over time, what’s driving it, and how it compares to the Fed’s 2% target.
 
-## Run locally
-1) `pip install -r requirements.txt`
-2) Create `.env`:FRED_API_KEY=1dd02e9ef189ec207cf5b5a5ab762be6
-3) `python app.py` → open the link in the terminal.
+The dashboard is fully interactive and updates live when users change the time range or inflation measure.  
+It lets you switch between **headline CPI**, **core CPI**, and **PCE inflation**, with extra context from **Fed interest rates** and **recession periods**.
 
-## Run inside a notebook (no browser tab)
-- Open `notebook.ipynb` and run the first cell (uses JupyterDash).
+# How it works
 
-## Data & transforms
-- FRED: `CPIAUCSL`, `CPILFESL`, `PCEPI`, `T5YIE`, `FEDFUNDS`, `USREC`
-- Computed: YoY %, MoM %, MoM SAAR, optional 3-month smoothing
-- Data cached to `data/cache_fred.csv` for speed.
+- Data comes directly from the [FRED API](https://fred.stlouisfed.org/), which provides official US economic data.  
+- The panel is built in **Python** using **Plotly Dash**, with **Pandas** for data cleaning and **requests/python-dotenv** to securely use the API key.  
+- When you change the date range, the graph updates automatically — so it’s a dynamic, live dashboard.
+  
+# What I learned
 
-## Notes
-- YoY for trend, MoM/SAAR for near-term momentum.
-- First 12 months are NaN for YoY by construction.
+Building this helped me understand:
+- How to connect to an API (FRED) and manage access keys using a `.env` file  
+- How to use **Plotly Dash** to make interactive charts  
+- How to structure a project in GitHub with a clean layout and `.gitignore`  
+- How to troubleshoot layout bugs and data issues when working with live updates
+
+It also helped me get more comfortable with GitHub — committing, pushing, and managing files properly.
+
+# How to run it locally
+
+1. **Clone this repository**  
+   ```bash
+   git clone https://github.com/gracegunne/US_Inflation_Dashboard.git
+   cd US_Inflation_Dashboard
+
 
