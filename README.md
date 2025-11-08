@@ -1,0 +1,1 @@
+# US Inflation Dashboard\n\nRun `pip install -r requirements.txt` then `python app.py`.\n\nAdd `.env` with your FRED_API_KEY.

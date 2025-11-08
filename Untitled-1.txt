@@ -1,0 +1,5 @@
+
+
+cd US_Inflation_Dashboard
+python --version
+pip install -r requirements.txt
