@@ -1,34 +1,140 @@
-# US Inflation Dashboard
+<div align="center">
 
-This project is my panel for our group’s Python Dashboard Assignment.  
-My focus was on **US inflation** — how it’s evolved over time, what’s driving it, and how it compares to the Fed’s 2% target.
+<h1>US Inflation Dashboard (Streamlit)</h1>
+<em>Interactive exploration of US inflation dynamics (CPI, Core CPI, PCE) with recession shading and Fed policy context.</em>
 
-The dashboard is fully interactive and updates live when users change the time range or inflation measure.  
-It lets you switch between **headline CPI**, **core CPI**, and **PCE inflation**, with extra context from **Fed interest rates** and **recession periods**.
+</div>
 
-# How it works
+## Overview
 
-- Data comes directly from the [FRED API](https://fred.stlouisfed.org/), which provides official US economic data.  
-- The panel is built in **Python** using **Plotly Dash**, with **Pandas** for data cleaning and **requests/python-dotenv** to securely use the API key.  
-- When you change the date range, the graph updates automatically — so it’s a dynamic, live dashboard.
-  
-# What I learned
+This Streamlit app lets you explore US inflation across multiple measures and time horizons. You can quickly switch among CPI (headline), Core CPI (ex food & energy), and PCE price index, view growth rates (YoY, MoM, SAAR) or level indices, apply smoothing, and overlay macro context (Fed Funds Rate, NBER recession periods, 2% guide line).
 
-Building this helped me understand:
-- How to connect to an API (FRED) and manage access keys using a `.env` file  
-- How to use **Plotly Dash** to make interactive charts  
-- How to structure a project in GitHub with a clean layout and `.gitignore`  
-- How to troubleshoot layout bugs and data issues when working with live updates
+All data are pulled on demand from the Federal Reserve Economic Data (FRED) API and cached locally for 24 hours to minimize API calls.
 
-It also helped me get more comfortable with GitHub — committing, pushing, and managing files properly.
+## Features
 
-# How to run it locally
+* Choose any combination of inflation series (CPIAUCSL, CPILFESL, PCEPI)
+* Time window modes: Last N years slider or custom date range selection
+* Multiple view transformations: YoY %, MoM %, annualized SAAR %, or Index (rebased to 100 at window start)
+* Plot types: Lines, Bars, or hybrid Lines + Bars
+* Optional smoothing (1–12 month moving average)
+* Recession shading using NBER recession indicator (USREC)
+* Fed Funds Rate overlay with dual y‑axis
+* 2% guide line (or 100 for index normalization) toggle
+* Lightweight, fast UI powered by Streamlit & Plotly
 
-1. **Clone this repository**  
-   ```bash
-   git clone https://github.com/gracegunne/US_Inflation_Dashboard.git
-   cd US_Inflation_Dashboard
+## Data Sources (FRED Series)
 
-![Dashboard Preview](dashboard_screenshot.png)
+| Purpose | Series ID | Description |
+|---------|-----------|-------------|
+| Headline CPI | `CPIAUCSL` | Consumer Price Index for All Urban Consumers |
+| Core CPI | `CPILFESL` | CPI less Food & Energy |
+| PCE Price Index | `PCEPI` | Personal Consumption Expenditures Price Index |
+| Policy Rate | `FEDFUNDS` | Effective Federal Funds Rate |
+| Recession Indicator | `USREC` | NBER recession periods (0/1) |
+
+## Requirements
+
+* Python 3.9+ (tested with 3.11)
+* FRED API key (free from https://fred.stlouisfed.org/)
+* Packages listed in `requirements.txt`
+
+## Quick Start
+
+```bash
+# Clone
+git clone https://github.com/gracegunne/US_Inflation_Dashboard.git
+cd US_Inflation_Dashboard
+
+# (Optional) create virtual environment (Windows PowerShell)
+python -m venv .venv
+\.\.venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create .env with your FRED key
+echo "FRED_API_KEY=YOUR_KEY_HERE" > .env
+
+# Run the app
+streamlit run inflation_panel_st.py
+```
+
+Then open the local URL Streamlit prints (usually http://localhost:8501).
+
+## Configuration
+
+Create a `.env` file in the repository root containing:
+
+```
+FRED_API_KEY=YOUR_FRED_KEY
+```
+
+If the key is missing the app will stop with an error message.
+
+### Caching
+Downloaded observations are saved in `data/cache_fred.csv` and reused for up to 24 hours. Delete the file (or change system time range significantly) to force a refresh.
+
+## Usage Guide
+
+1. Select the inflation series you want in the sidebar.
+2. Pick a time range mode: Last N years slider or Custom date range.
+3. Choose the view (YoY, MoM, SAAR, Index). Index will rebase chosen series to 100 at the start of the window.
+4. Optionally enable smoothing (rolling mean) to reduce noise.
+5. Change plot style (lines, bars, combo) depending on preference.
+6. Toggle recession shading, Fed Funds overlay, and guideline.
+7. Hover over the chart for synchronized values; legend items are clickable to hide/show series.
+
+## Computation Details
+
+* YoY: 12‑month percent change.
+* MoM: 1‑month percent change.
+* SAAR: Annualized rate: $((1 + \text{MoM}/100)^{12} - 1) \times 100$.
+* Index normalization: Each selected series rebased to 100 at first valid value inside the selected window.
+* Smoothing: Centered rolling mean not used; simple trailing rolling mean with `min_periods=1`.
+
+## Troubleshooting
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| "Missing FRED_API_KEY" error | `.env` not found or key blank | Create `.env` with key; restart app |
+| Empty chart | No series selected | Pick at least one CPI/PCE series |
+| Very spiky SAAR | No smoothing | Increase smoothing window (3–6) |
+| Old data not updating | Cache still valid | Delete `data/cache_fred.csv` |
+| API error / timeout | Network or FRED rate limit | Retry after a minute; ensure key is correct |
+
+## Project Structure
+
+```
+inflation_panel_st.py   # Streamlit app
+data/cache_fred.csv     # Cached FRED responses (auto‑generated)
+requirements.txt        # Python dependencies
+README.md               # Documentation
+```
+
+## Possible Enhancements
+
+* Add CPI component breakdown (e.g., shelter, energy)
+* Export chart as PNG/CSV directly from UI
+* Compare against Fed inflation projections
+* Add automatic refresh button & cache age display
+
+## License
+
+This project is licensed under the **MIT License** (see `LICENSE`).
+
+## Recession Shading Logic
+
+Recession periods use the monthly `USREC` (0/1) series. Consecutive months with value > 0.5 are grouped into blocks and rendered as light gray vertical rectangles behind the main traces. The algorithm walks the boolean series, recording start when entering a recession and end when leaving; an unfinished block at the end extends to the latest date.
+
+## Acknowledgments
+
+Data courtesy of Federal Reserve Bank of St. Louis (FRED). Built with Streamlit, Plotly, Pandas, NumPy.
+
+---
+Feel free to open issues or submit pull requests with improvements.
+
+<!-- Screenshot placeholder -->
+<!-- ![Dashboard Preview](dashboard_screenshot.png) -->
 
 
