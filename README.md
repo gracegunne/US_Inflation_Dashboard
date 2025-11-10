@@ -86,7 +86,7 @@ Create a `.env` file in the repository root containing:
 FRED_API_KEY=YOUR_FRED_KEY
 ```
 
-If the key is missing the app will stop with an error message.
+If the key is missing or invalid, the app now shows a sidebar prompt where you can paste a valid key without restarting. (For persistent use still add it to `.env`.)
 
 ### Caching
 Downloaded observations are saved in `data/cache_fred.csv` and reused for up to 24 hours. Delete the file (or change system time range significantly) to force a refresh.
@@ -113,7 +113,8 @@ Downloaded observations are saved in `data/cache_fred.csv` and reused for up to 
 
 | Issue | Cause | Fix |
 |-------|-------|-----|
-| "Missing FRED_API_KEY" error | `.env` not found or key blank | Create `.env` with key; restart app |
+| Sidebar asks for API key | `.env` missing or invalid key | Paste key in sidebar or add to `.env` and reload |
+| "Missing FRED_API_KEY" error (older versions) | Legacy behavior | Update to latest code; or supply key in `.env` |
 | Empty chart | No series selected | Pick at least one CPI/PCE series |
 | Very spiky SAAR | No smoothing | Increase smoothing window (3–6) |
 | Old data not updating | Cache still valid | Delete `data/cache_fred.csv` |
