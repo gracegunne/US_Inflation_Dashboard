@@ -11,6 +11,14 @@ This Streamlit app lets you explore US inflation across multiple measures and ti
 
 All data are pulled on demand from the Federal Reserve Economic Data (FRED) API and cached locally for 24 hours to minimize API calls.
 
+## Why it’s interesting
+
+This dashboard makes it easy to answer practical macro questions:
+- Are inflation trends accelerating or cooling right now (MoM vs SAAR)?
+- How different are CPI and PCE in the most recent months?
+- Is inflation above/below the 2% guide line—and for how long?
+- How does inflation typically move around recessions and policy tightening?
+
 ## Features
 
 * Choose any combination of inflation series (CPIAUCSL, CPILFESL, PCEPI)
@@ -48,7 +56,7 @@ cd US_Inflation_Dashboard
 
 # (Optional) create virtual environment (Windows PowerShell)
 python -m venv .venv
-\.\.venv\Scripts\Activate.ps1
+\.venv\Scripts\Activate.ps1
 
 # Install dependencies
 pip install -r requirements.txt
@@ -61,6 +69,14 @@ streamlit run inflation_panel_st.py
 ```
 
 Then open the local URL Streamlit prints (usually http://localhost:8501).
+
+### Screenshot
+
+After launching locally, capture a screenshot and save it as `dashboard_screenshot.png` in the repo root, then add this line to display it:
+
+```markdown
+![Dashboard Preview](dashboard_screenshot.png)
+```
 
 ## Configuration
 
