@@ -1,4 +1,4 @@
-US Inflation Dashboard# US Inflation Dashboard<div align="center">
+# US Inflation DashboardUS Inflation Dashboard# US Inflation Dashboard<div align="center">
 
 
 
@@ -6,113 +6,229 @@ Quick way to visualize US inflation trends over the past 5 years using different
 
 
 
-What it doesQuick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.<h1>US Inflation Dashboard (5Y)</h1>
+## What it doesQuick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.
 
 
 
-Track 6 different inflation metrics - headline CPI, core CPI, PCE, energy, food, and housing. You can view them as year-over-year percentages, month-over-month changes, or annualized rates. Also shows the Fed policy rate and recession periods for context.<em>Interactive exploration of US inflation dynamics across 6 key inflation metrics with recession shading and Fed policy context.</em>
+Track 6 different inflation metrics - headline CPI, core CPI, PCE, energy, food, and housing. You can view them as year-over-year percentages, month-over-month changes, or annualized rates. Also shows the Fed policy rate and recession periods for context.
 
 
 
-Data comes from FRED and gets cached for 24 hours so you're not constantly hitting their API.## What it does
+Data comes from FRED and gets cached for 24 hours so you're not constantly hitting their API.What it doesQuick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.<h1>US Inflation Dashboard (5Y)</h1>
 
 
+
+## Features
+
+
+
+### Inflation MetricsTrack 6 different inflation metrics - headline CPI, core CPI, PCE, energy, food, and housing. You can view them as year-over-year percentages, month-over-month changes, or annualized rates. Also shows the Fed policy rate and recession periods for context.<em>Interactive exploration of US inflation dynamics across 6 key inflation metrics with recession shading and Fed policy context.</em>
+
+Six inflation measures to choose from: CPI Headline, Core CPI (minus food and energy), PCE Price Index, CPI Energy, CPI Food, and CPI Housing
+
+
+
+### Display Options
+
+- Always shows the last 5 years of dataData comes from FRED and gets cached for 24 hours so you're not constantly hitting their API.## What it does
+
+- View as year-over-year percentage, month-over-month percentage, annualized rate, or indexed to 100
+
+- Line charts, bar charts, or both
+
+- Optional 3-month smoothing to reduce noise
 
 Features</div>
 
+### Additional Overlays
 
+- Recession shading using NBER data
 
-Six inflation measures to choose from: CPI Headline, Core CPI (minus food and energy), PCE Price Index, CPI Energy, CPI Food, and CPI HousingTrack 6 different inflation metrics (headline CPI, core CPI, PCE, energy, food, and housing) with options to view year-over-year, month-over-month, or annualized rates. Also shows Fed policy rate and recession periods for context.
+- Fed Funds Rate overlay
 
-
-
-Always shows the last 5 years of data## Overview
-
-
-
-View as year-over-year percentage, month-over-month percentage, annualized rate, or indexed to 100Data comes from FRED and gets cached for 24 hours so you're not constantly hitting their API.
+- 2 percent guideline toggleSix inflation measures to choose from: CPI Headline, Core CPI (minus food and energy), PCE Price Index, CPI Energy, CPI Food, and CPI HousingTrack 6 different inflation metrics (headline CPI, core CPI, PCE, energy, food, and housing) with options to view year-over-year, month-over-month, or annualized rates. Also shows Fed policy rate and recession periods for context.
 
 
 
-Line charts, bar charts, or bothThis Streamlit app lets you explore US inflation across 6 comprehensive measures over a 5-year time horizon. You can quickly switch among CPI (headline, core, energy, food, housing) and PCE price index, view growth rates (YoY, MoM, SAAR) or level indices, apply smoothing, and overlay macro context (Fed Funds Rate, NBER recession periods, 2% guide line).
+## Data Sources
 
 
+
+All data from FRED:Always shows the last 5 years of data## Overview
+
+
+
+- CPIAUCSL - Headline CPI
+
+- CPILFESL - Core CPI (no food or energy)
+
+- PCEPI - PCE Price Index (what the Fed actually watches)View as year-over-year percentage, month-over-month percentage, annualized rate, or indexed to 100Data comes from FRED and gets cached for 24 hours so you're not constantly hitting their API.
+
+- CPIENGSL - CPI Energy
+
+- CPIUFDSL - CPI Food
+
+- CPIHOSNS - CPI Housing
+
+- FEDFUNDS - Fed Funds RateLine charts, bar charts, or bothThis Streamlit app lets you explore US inflation across 6 comprehensive measures over a 5-year time horizon. You can quickly switch among CPI (headline, core, energy, food, housing) and PCE price index, view growth rates (YoY, MoM, SAAR) or level indices, apply smoothing, and overlay macro context (Fed Funds Rate, NBER recession periods, 2% guide line).
+
+- USREC - Recession indicator
+
+
+
+## Setup
 
 Optional 3-month smoothing to reduce noise## Features
 
-
-
-Recession shading using NBER dataAll data are pulled on demand from the Federal Reserve Economic Data (FRED) API and cached locally for 24 hours to minimize API calls.
-
-
-
-Fed Funds Rate overlay- 6 inflation measures: CPI Headline, Core CPI (minus food & energy), PCE Price Index, CPI Energy, CPI Food, CPI Housing
-
-
-
-2 percent guideline toggle- Shows last 5 years of data## Why it’s interesting
-
-
-
-Data Sources- View as YoY %, MoM %, annualized rate, or indexed to 100
-
-
-
-All data from FRED:- Line charts, bar charts, or bothThis dashboard makes it easy to answer practical macro questions:
-
-
-
-CPIAUCSL - Headline CPI- Optional 3-month smoothing- Are inflation trends accelerating or cooling right now (MoM vs SAAR)?
-
-CPILFESL - Core CPI (no food or energy)
-
-PCEPI - PCE Price Index (what the Fed actually watches)- Recession shading (NBER data)- How do different inflation components (energy, food, housing, core) compare?
-
-CPIENGSL - CPI Energy
-
-CPIUFDSL - CPI Food- Fed Funds Rate overlay- Is inflation above/below the 2% guide line—and for how long?
-
-CPIHOSNS - CPI Housing
-
-FEDFUNDS - Fed Funds Rate- 2% guideline toggle- How does inflation typically move around recessions and policy tightening?
-
-USREC - Recession indicator
-
-
-
-Setup
-
-## Data Sources## Features
+### Requirements
 
 You need Python 3.9 or higher and a free FRED API key from https://fred.stlouisfed.org/
 
 
 
+### Installation StepsRecession shading using NBER dataAll data are pulled on demand from the Federal Reserve Economic Data (FRED) API and cached locally for 24 hours to minimize API calls.
+
+
+
 Clone the repo:
 
-git clone https://github.com/gracegunne/US_Inflation_Dashboard.gitAll data from FRED:* **6 comprehensive inflation metrics**: CPI Headline, CPI Core (ex Food & Energy), PCE Price Index, CPI Energy, CPI Food, CPI Housing
+```
+
+git clone https://github.com/gracegunne/US_Inflation_Dashboard.gitFed Funds Rate overlay- 6 inflation measures: CPI Headline, Core CPI (minus food & energy), PCE Price Index, CPI Energy, CPI Food, CPI Housing
 
 cd US_Inflation_Dashboard
 
-* Always displays last 5 years of data
+```
 
-Optional - create a virtual environment:
 
-python -m venv .venv- `CPIAUCSL` - Headline CPI* Multiple view transformations: YoY %, MoM %, annualized SAAR %, or Index (rebased to 100 at window start)
+
+Optional - create a virtual environment:2 percent guideline toggle- Shows last 5 years of data## Why it’s interesting
+
+```
+
+python -m venv .venv
 
 .venv\Scripts\Activate.ps1
 
-- `CPILFESL` - Core CPI (no food/energy)* Plot types: Lines, Bars, or hybrid Lines + Bars
+```Data Sources- View as YoY %, MoM %, annualized rate, or indexed to 100
+
+
 
 Install the packages:
 
-pip install -r requirements.txt- `PCEPI` - PCE Price Index (what the Fed actually watches)* Optional 3-month smoothing to reduce noise
+```
+
+pip install -r requirements.txtAll data from FRED:- Line charts, bar charts, or bothThis dashboard makes it easy to answer practical macro questions:
+
+```
 
 
+
+Add your FRED key:
+
+```CPIAUCSL - Headline CPI- Optional 3-month smoothing- Are inflation trends accelerating or cooling right now (MoM vs SAAR)?
+
+echo FRED_API_KEY=YOUR_KEY_HERE > .env
+
+```CPILFESL - Core CPI (no food or energy)
+
+
+
+Run it:PCEPI - PCE Price Index (what the Fed actually watches)- Recession shading (NBER data)- How do different inflation components (energy, food, housing, core) compare?
+
+```
+
+streamlit run inflation_panel_st.pyCPIENGSL - CPI Energy
+
+```
+
+CPIUFDSL - CPI Food- Fed Funds Rate overlay- Is inflation above/below the 2% guide line—and for how long?
+
+Open the local URL, usually http://localhost:8501
+
+CPIHOSNS - CPI Housing
+
+## How to use
+
+FEDFUNDS - Fed Funds Rate- 2% guideline toggle- How does inflation typically move around recessions and policy tightening?
+
+### Basic Steps
+
+1. Pick an inflation metric from the dropdownUSREC - Recession indicator
+
+2. Choose how you want to view it - year-over-year, month-over-month, annualized, or index
+
+3. Turn on smoothing if the chart looks too noisy
+
+4. Toggle recession shading, Fed rate, and 2 percent line as needed
+
+Setup
+
+### Data Caching
+
+The cache file saves data for 24 hours. Delete data/cache_fred.csv if you need fresh data.## Data Sources## Features
+
+
+
+## TroubleshootingYou need Python 3.9 or higher and a free FRED API key from https://fred.stlouisfed.org/
+
+
+
+### Common Issues
+
+
+
+**App asks for API key** - Either paste it in the sidebar or add it to a .env fileClone the repo:
+
+
+
+**Chart is empty** - Make sure you selected a seriesgit clone https://github.com/gracegunne/US_Inflation_Dashboard.gitAll data from FRED:* **6 comprehensive inflation metrics**: CPI Headline, CPI Core (ex Food & Energy), PCE Price Index, CPI Energy, CPI Food, CPI Housing
+
+
+
+**SAAR looks crazy** - Turn on smoothingcd US_Inflation_Dashboard
+
+
+
+**Data seems old** - Delete data/cache_fred.csv to refresh* Always displays last 5 years of data
+
+
+
+## What's includedOptional - create a virtual environment:
+
+
+
+- inflation_panel_st.py - main apppython -m venv .venv- `CPIAUCSL` - Headline CPI* Multiple view transformations: YoY %, MoM %, annualized SAAR %, or Index (rebased to 100 at window start)
+
+- data/cache_fred.csv - cached data (auto-generated)
+
+- requirements.txt - dependencies.venv\Scripts\Activate.ps1
+
+- README.md - this file
+
+- `CPILFESL` - Core CPI (no food/energy)* Plot types: Lines, Bars, or hybrid Lines + Bars
+
+## Ideas for later
+
+Install the packages:
+
+- Add more CPI components like transportation and medical
+
+- Export charts directlypip install -r requirements.txt- `PCEPI` - PCE Price Index (what the Fed actually watches)* Optional 3-month smoothing to reduce noise
+
+- Compare to Fed projections
+
+- Show cache age
+
+- Custom date ranges
 
 Add your FRED key:- `CPIENGSL` - CPI Energy* Recession shading using NBER recession indicator (USREC)
 
+---
+
 echo FRED_API_KEY=YOUR_KEY_HERE > .env
+
+Data from Federal Reserve Bank of St. Louis (FRED). Built with Streamlit and the usual Python data stack.
 
 - `CPIUFDSL` - CPI Food* Fed Funds Rate overlay with dual y‑axis
 
