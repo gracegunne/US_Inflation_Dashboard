@@ -74,12 +74,8 @@ streamlit run inflation_panel_st.py
 Then open the local URL Streamlit prints (usually http://localhost:8501).
 
 ### Screenshot
-
-After launching locally, capture a screenshot and save it as `dashboard_screenshot.png` in the repo root, then add this line to display it:
-
-```markdown
 ![Dashboard Preview](dashboard_screenshot.png)
-```
+
 
 ## Configuration
 
