@@ -1,28 +1,54 @@
-# US Inflation Dashboard# US Inflation DashboardUS Inflation Dashboard# US Inflation Dashboard<div align="center">
+# US Inflation Dashboard# US Inflation Dashboard# US Inflation DashboardUS Inflation Dashboard# US Inflation Dashboard<div align="center">
 
 
 
-Quick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.
+A simple Streamlit app to explore US inflation over the last 5 years across CPI and PCE measures. Data comes from FRED and is cached for a day.
 
 
 
-## What it doesQuick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.
+## Quick start (Windows PowerShell)Quick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.
 
 
 
-Track 6 different inflation metrics - headline CPI, core CPI, PCE, energy, food, and housing. You can view them as year-over-year percentages, month-over-month changes, or annualized rates. Also shows the Fed policy rate and recession periods for context.
+```powershell
+
+# optional: create and activate a virtual env
+
+python -m venv .venv## What it doesQuick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.
+
+.venv\Scripts\Activate.ps1
 
 
+
+# install dependencies
+
+pip install -r requirements.txtTrack 6 different inflation metrics - headline CPI, core CPI, PCE, energy, food, and housing. You can view them as year-over-year percentages, month-over-month changes, or annualized rates. Also shows the Fed policy rate and recession periods for context.
+
+
+
+# add your FRED API key (free at https://fred.stlouisfed.org/)
+
+Set-Content -Path .env -Value 'FRED_API_KEY=YOUR_KEY_HERE'
 
 Data comes from FRED and gets cached for 24 hours so you're not constantly hitting their API.## What it doesQuick way to visualize US inflation trends over the past 5 years using different CPI measures and the PCE index.
 
+# run the app
 
+streamlit run inflation_panel_st.py
+
+```
 
 ## Features
 
+Open the URL shown in the terminal (usually http://localhost:8501).
 
 
-### Inflation MetricsTrack 6 different inflation metrics - headline CPI, core CPI, PCE, energy, food, and housing. You can view them as year-over-year percentages, month-over-month changes, or annualized rates. Also shows the Fed policy rate and recession periods for context.
+
+## Notes
+
+- To refresh data, delete data/cache_fred.csv.### Inflation MetricsTrack 6 different inflation metrics - headline CPI, core CPI, PCE, energy, food, and housing. You can view them as year-over-year percentages, month-over-month changes, or annualized rates. Also shows the Fed policy rate and recession periods for context.
+
+- If the app asks for an API key, paste it in the sidebar or put it in .env as shown above.
 
 Six inflation measures to choose from: CPI Headline, Core CPI (minus food and energy), PCE Price Index, CPI Energy, CPI Food, and CPI Housing
 
