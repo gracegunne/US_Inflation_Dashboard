@@ -1,4 +1,4 @@
-﻿
+
 import os, pathlib, time
 from typing import Dict, List
 
@@ -12,19 +12,54 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # ---------------- Config ----------------
-APP_TITLE = "US Inflation (5Y) — Matplotlib/Seaborn"
+APP_TITLE = "US Inflation (5Y)"
 CACHE_DIR = pathlib.Path("data"); CACHE_DIR.mkdir(parents=True, exist_ok=True)
 CACHE_PATH = CACHE_DIR / "cache_fred.csv"
 CACHE_MAX_AGE_HOURS = 24
 
 SERIES_META = {
+    # Inflation Measures
     "CPIAUCSL": {"name": "CPI (Headline)"},
     "CPILFESL": {"name": "CPI (Core ex F&E)"},
     "PCEPI":    {"name": "PCE Price Index"},
-    "FEDFUNDS": {"name": "Fed Funds"},
+    "CPIENGSL": {"name": "CPI Energy"},
+    "CPIUFDSL": {"name": "CPI Food"},
+    "CPIHOSNS": {"name": "CPI Housing"},
+    
+    # Labor Market
+    "UNRATE":   {"name": "Unemployment Rate"},
+    "PAYEMS":   {"name": "Nonfarm Payrolls"},
+    "AHETPI":   {"name": "Avg Hourly Earnings"},
+    "CIVPART":  {"name": "Labor Force Participation"},
+    
+    # Economic Growth
+    "GDP":      {"name": "GDP"},
+    "GDPC1":    {"name": "Real GDP"},
+    "PCEC96":   {"name": "Consumer Spending"},
+    "INDPRO":   {"name": "Industrial Production"},
+    
+    # Interest Rates & Monetary Policy
+    "FEDFUNDS": {"name": "Fed Funds Rate"},
+    "DGS10":    {"name": "10-Year Treasury"},
+    "DGS2":     {"name": "2-Year Treasury"},
+    "T10Y2Y":   {"name": "10Y-2Y Spread"},
+    "MORTGAGE30US": {"name": "30Y Mortgage Rate"},
+    
+    # Housing Market
+    "HOUST":    {"name": "Housing Starts"},
+    "CSUSHPINSA": {"name": "Case-Shiller Home Price"},
+    
+    # Consumer Sentiment
+    "UMCSENT":  {"name": "Consumer Sentiment"},
+    
+    # Markets
+    "SP500":    {"name": "S&P 500"},
+    "DEXUSEU":  {"name": "USD/EUR"},
+    
+    # Recession Indicator
     "USREC":    {"name": "NBER Recession 0/1"},
 }
-PRICE_SERIES = ["CPIAUCSL", "CPILFESL", "PCEPI"]
+PRICE_SERIES = ["CPIAUCSL", "CPILFESL", "PCEPI", "CPIENGSL", "CPIUFDSL", "CPIHOSNS"]
 USREC_SERIES = "USREC"
 FRED_URL = "https://api.stlouisfed.org/fred/series/observations"
 
@@ -33,15 +68,32 @@ def _to_month_end(d):
     return (pd.to_datetime(d) + pd.offsets.MonthEnd(0))
 
 def fetch_fred(series_id: str, api_key: str) -> pd.Series:
+    # Quarterly series - don't force monthly frequency
+    quarterly_series = ["GDP", "GDPC1", "PCEC96"]
+    
     params = {
         "series_id": series_id, "api_key": api_key, "file_type": "json",
-        "frequency": "m", "aggregation_method": "eop", "observation_start": "1980-01-01"
+        "observation_start": "1980-01-01"
     }
+    
+    # Only add frequency for non-quarterly series
+    if series_id not in quarterly_series:
+        params["frequency"] = "m"
+        params["aggregation_method"] = "eop"
+    
     r = requests.get(FRED_URL, params=params, timeout=30); r.raise_for_status()
     obs = r.json()["observations"]
     idx = pd.DatetimeIndex([_to_month_end(o["date"]) for o in obs], name="date")
     vals = [np.nan if o["value"] in (".","") else float(o["value"]) for o in obs]
-    return pd.Series(vals, index=idx, name=series_id).resample("M").last()
+    s = pd.Series(vals, index=idx, name=series_id)
+    
+    # Resample quarterly to monthly using forward fill
+    if series_id in quarterly_series:
+        s = s.resample("ME").ffill()
+    else:
+        s = s.resample("ME").last()
+    
+    return s
 
 def load_or_refresh_cache(api_key: str) -> pd.DataFrame:
     if CACHE_PATH.exists():
@@ -62,8 +114,8 @@ def last_n_years(df: pd.DataFrame, n=5) -> pd.DataFrame:
     return df[df.index >= cutoff]
 
 def compute_views(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
-    yoy = df[PRICE_SERIES].pct_change(12)*100
-    mom = df[PRICE_SERIES].pct_change(1)*100
+    yoy = df[PRICE_SERIES].pct_change(12, fill_method=None)*100
+    mom = df[PRICE_SERIES].pct_change(1, fill_method=None)*100
     saar = ((1 + mom/100.0)**12 - 1)*100
     idx = df[PRICE_SERIES].copy()
     return {"YoY": yoy, "MoM": mom, "SAAR": saar, "Index": idx}
@@ -92,7 +144,7 @@ def recession_blocks(usrec: pd.Series):
 # --------------- App ----------------
 st.set_page_config(APP_TITLE, layout="centered")
 st.title(APP_TITLE)
-st.caption("Always last 5 years. Data: FRED (CPIAUCSL, CPILFESL, PCEPI, FEDFUNDS, USREC).")
+st.caption("Interactive US inflation dashboard. Data: FRED (CPIAUCSL, CPILFESL, PCEPI, CPIENGSL, CPIUFDSL, CPIHOSNS, FEDFUNDS, USREC).")
 
 load_dotenv()
 api_key = os.getenv("FRED_API_KEY", "")
@@ -100,11 +152,12 @@ if not api_key:
     st.error("Missing FRED_API_KEY in your .env (same folder).")
     st.stop()
 
-wide = last_n_years(load_or_refresh_cache(api_key), 5)
-views = compute_views(wide)
-
 with st.sidebar:
     st.subheader("Controls")
+    
+    # Time range slider
+    n_years = st.slider("Years to display", min_value=1, max_value=5, value=5, step=1)
+    
     series = st.multiselect(
         "Series", options=PRICE_SERIES,
         format_func=lambda s: SERIES_META[s]["name"],
@@ -115,6 +168,9 @@ with st.sidebar:
     guide = st.checkbox("2% guide (YoY / Index start=100)", value=True)
     rec = st.checkbox("Recession shading", value=True)
     fed = st.checkbox("Fed Funds overlay (right axis)", value=False)
+
+wide = last_n_years(load_or_refresh_cache(api_key), n_years)
+views = compute_views(wide)
 
 if not series:
     st.warning("Pick at least one series.")
@@ -152,7 +208,7 @@ if rec:
 if fed:
     ff = wide["FEDFUNDS"].rolling(3, min_periods=1).mean()
     ax2 = ax1.twinx()
-    ax2.plot(ff.index, ff.values, label="Fed Funds (rhs)")
+    ax2.plot(ff.index, ff.values, label="Fed Funds (rhs)", color="orange", linestyle="--")
     ax2.set_ylabel("%")
     ax2.grid(False)
 
@@ -164,6 +220,5 @@ st.pyplot(fig, clear_figure=True)
 notes = []
 if view == "SAAR": notes.append("SAAR = ((1 + MoM/100)^12 − 1) × 100.")
 if smooth: notes.append("3-month moving average applied.")
-if view == "Index": notes.append("Series normalized to 100 at start of 5-year window.")
+if view == "Index": notes.append(f"Series normalized to 100 at start of {n_years}-year window.")
 st.caption(" ".join(notes))
-

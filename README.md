@@ -1,13 +1,13 @@
 <div align="center">
 
-<h1>US Inflation Dashboard (Streamlit)</h1>
-<em>Interactive exploration of US inflation dynamics (CPI, Core CPI, PCE) with recession shading and Fed policy context.</em>
+<h1>US Inflation Dashboard (5Y)</h1>
+<em>Interactive exploration of US inflation dynamics across 6 key inflation metrics with recession shading and Fed policy context.</em>
 
 </div>
 
 ## Overview
 
-This Streamlit app lets you explore US inflation across multiple measures and time horizons. You can quickly switch among CPI (headline), Core CPI (ex food & energy), and PCE price index, view growth rates (YoY, MoM, SAAR) or level indices, apply smoothing, and overlay macro context (Fed Funds Rate, NBER recession periods, 2% guide line).
+This Streamlit app lets you explore US inflation across 6 comprehensive measures over a 5-year time horizon. You can quickly switch among CPI (headline, core, energy, food, housing) and PCE price index, view growth rates (YoY, MoM, SAAR) or level indices, apply smoothing, and overlay macro context (Fed Funds Rate, NBER recession periods, 2% guide line).
 
 All data are pulled on demand from the Federal Reserve Economic Data (FRED) API and cached locally for 24 hours to minimize API calls.
 
@@ -15,21 +15,21 @@ All data are pulled on demand from the Federal Reserve Economic Data (FRED) API 
 
 This dashboard makes it easy to answer practical macro questions:
 - Are inflation trends accelerating or cooling right now (MoM vs SAAR)?
-- How different are CPI and PCE in the most recent months?
+- How do different inflation components (energy, food, housing, core) compare?
 - Is inflation above/below the 2% guide line—and for how long?
 - How does inflation typically move around recessions and policy tightening?
 
 ## Features
 
-* Choose any combination of inflation series (CPIAUCSL, CPILFESL, PCEPI)
-* Time window modes: Last N years slider or custom date range selection
+* **6 comprehensive inflation metrics**: CPI Headline, CPI Core (ex Food & Energy), PCE Price Index, CPI Energy, CPI Food, CPI Housing
+* Always displays last 5 years of data
 * Multiple view transformations: YoY %, MoM %, annualized SAAR %, or Index (rebased to 100 at window start)
 * Plot types: Lines, Bars, or hybrid Lines + Bars
-* Optional smoothing (1–12 month moving average)
+* Optional 3-month smoothing to reduce noise
 * Recession shading using NBER recession indicator (USREC)
 * Fed Funds Rate overlay with dual y‑axis
 * 2% guide line (or 100 for index normalization) toggle
-* Lightweight, fast UI powered by Streamlit & Plotly
+* Lightweight, fast UI powered by Streamlit & Matplotlib/Seaborn
 
 ## Data Sources (FRED Series)
 
@@ -37,7 +37,10 @@ This dashboard makes it easy to answer practical macro questions:
 |---------|-----------|-------------|
 | Headline CPI | `CPIAUCSL` | Consumer Price Index for All Urban Consumers |
 | Core CPI | `CPILFESL` | CPI less Food & Energy |
-| PCE Price Index | `PCEPI` | Personal Consumption Expenditures Price Index |
+| PCE Price Index | `PCEPI` | Personal Consumption Expenditures Price Index (Fed's preferred measure) |
+| CPI Energy | `CPIENGSL` | Energy component of CPI |
+| CPI Food | `CPIUFDSL` | Food component of CPI |
+| CPI Housing | `CPIHOSNS` | Housing component of CPI |
 | Policy Rate | `FEDFUNDS` | Effective Federal Funds Rate |
 | Recession Indicator | `USREC` | NBER recession periods (0/1) |
 
@@ -93,13 +96,12 @@ Downloaded observations are saved in `data/cache_fred.csv` and reused for up to 
 
 ## Usage Guide
 
-1. Select the inflation series you want in the sidebar.
-2. Pick a time range mode: Last N years slider or Custom date range.
-3. Choose the view (YoY, MoM, SAAR, Index). Index will rebase chosen series to 100 at the start of the window.
-4. Optionally enable smoothing (rolling mean) to reduce noise.
-5. Change plot style (lines, bars, combo) depending on preference.
-6. Toggle recession shading, Fed Funds overlay, and guideline.
-7. Hover over the chart for synchronized values; legend items are clickable to hide/show series.
+1. Select the inflation series you want from the dropdown in the sidebar (choose from 6 inflation metrics).
+2. Choose the view (YoY, MoM, SAAR, Index). Index will rebase chosen series to 100 at the start of the 5-year window.
+3. Optionally enable 3-month smoothing to reduce noise.
+4. Change plot style (lines, bars, combo) depending on preference.
+5. Toggle recession shading, Fed Funds overlay, and 2% guideline.
+6. Hover over the chart for synchronized values; legend items are clickable to hide/show series.
 
 ## Computation Details
 
@@ -131,10 +133,11 @@ README.md               # Documentation
 
 ## Possible Enhancements
 
-* Add CPI component breakdown (e.g., shelter, energy)
+* Add more CPI component breakdowns (e.g., transportation, medical care)
 * Export chart as PNG/CSV directly from UI
 * Compare against Fed inflation projections
 * Add automatic refresh button & cache age display
+* Support for custom time ranges beyond 5 years
 
 ## License
 
@@ -146,7 +149,7 @@ Recession periods use the monthly `USREC` (0/1) series. Consecutive months with 
 
 ## Acknowledgments
 
-Data courtesy of Federal Reserve Bank of St. Louis (FRED). Built with Streamlit, Plotly, Pandas, NumPy.
+Data courtesy of Federal Reserve Bank of St. Louis (FRED). Built with Streamlit, Matplotlib, Seaborn, Pandas, NumPy.
 
 ---
 Feel free to open issues or submit pull requests with improvements.
